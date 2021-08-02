@@ -86,7 +86,7 @@ func EncryptText(ctx context.Context, text string) (cipherText string, err error
 		Version: int32(version),
 		Sign:    sign,
 	}
-
+	// 采用 protobuf 转成一个字节流，因其以高效的二进制方式存储，结果数据长度会较小
 	body, err := proto.Marshal(info)
 	if err != nil {
 		err = errors.E(op, fmt.Errorf("protobuf marshal err %v", err))

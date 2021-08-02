@@ -1,8 +1,28 @@
-package util
+/*
+
+Go 中有多种声明错误（Error) 的选项：
+errors.New 对于简单静态字符串的错误
+fmt.Errorf 用于格式化的错误字符串
+实现 Error() 方法的自定义类型
+用 "pkg/errors".Wrap 的 Wrapped errors
+
+错误具有以下传播方式
+如果不需要额外信息的简单错误,则使用errors.New 足够了。
+如果客户需要检测并处理此错误，则使用自定义类型并实现该 Error() 方法。
+如果正在传播下游函数返回的错误，则使用错误包装Error Wrapping 以便错误消息提供更多上下文 ,errors.Cause 可用于提取原始错误。
+如果调用者不需要检测或处理的特定错误情况等其他情况，则使用 fmt.Errorf。
+
+*/
+
+package error
 
 import (
+	"errors"
 	"fmt"
 )
+
+//不需要额外信息的简单错误
+var ErrCouldNotOpen = errors.New("could not open1")
 
 //生成ID失败
 type errIdGenRpc struct {
@@ -104,6 +124,7 @@ func NewNotFoundErr(fun, msg string) error {
 	return &errNotFound{Fun: fun, Msg: msg}
 }
 
+// IsNotFoundError 最好公开匹配器功能以检查错误
 func IsNotFoundError(err error) bool {
 	_, ok := err.(*errNotFound)
 	return ok
