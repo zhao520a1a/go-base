@@ -2,7 +2,7 @@
 slices 和 maps 包含了指向底层数据的指针，注意用户对暴露内部状态的 map 或 slice 的修改。
 */
 
-package util
+package convert
 
 import "sync"
 
