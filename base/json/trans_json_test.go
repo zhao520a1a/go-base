@@ -4,11 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"gitlab.pri.ibanyu.com/quality/dry.git/errors"
+	"strconv"
 	"testing"
 )
 
 //测试空字符、nil Json转码
 func TestTransJson(t *testing.T) {
+
+	firstOrderId, err := strconv.ParseInt("", 10, 64)
+	if err != nil {
+		fmt.Println("error")
+	}
+	fmt.Println(firstOrderId)
+
 	TransInt64ArrToJson(nil)
 	TransInt64ArrToJson([]int64{})
 

@@ -26,50 +26,50 @@ func TestCallMethod(t *testing.T) {
 	pers1.email = "123@qq.com"
 	fmt.Printf("原始struct地址是：%p\n", &pers1)
 
-	//调用函数
+	//调用函数传参
 	upPerson1(&pers1)
-	fmt.Println(pers1)
 	upPerson2(pers1)
-	fmt.Println(pers1)
 
-	//调用方法1
-	fullName := pers1.fullName("-")
-	fmt.Println(fullName)
-
-	//调用方法2:指针调用方法
+	//调用方法:指针调用方法
 	var pers2 *Person
 	pers2 = &pers1
-	fmt.Println(pers2.firstName)
+	fmt.Printf("原始struct地址是：%p\n", pers2)
+	pers2.fullName("-")
 
-	//调用方法3：值调用方法
+	//调用方法：值调用方法
 	pers1.SetFirstName("Eric")
-	fmt.Println(pers1.firstName)
+	fmt.Printf("per2.firstName = %s \n", pers2.firstName)
 
 	//调用内嵌对象的方法
 	pers1.changeTelephone("10000")
 	fmt.Println(pers1)
+	fmt.Println(pers1.String())
 
 }
 
+//引用传递
 func upPerson1(p *Person) {
-	fmt.Printf("函数里接收到struct的内存地址是：%p\n", p)
-	p.firstName = strings.ToUpper(p.firstName)
-	p.lastName = strings.ToUpper(p.lastName)
-}
-
-func upPerson2(p Person) {
-	fmt.Printf("函数里接收到struct的内存地址是：%p\n", &p)
+	fmt.Printf("upPerson1 函数里接收到struct的内存地址是：%p\n", p)
 	p.firstName = strings.ToUpper(p.firstName)
 	p.lastName = strings.ToUpper(p.lastName)
 }
 
 //值传递
+func upPerson2(p Person) {
+	fmt.Printf("upPerson2 函数里接收到struct的内存地址是：%p\n", &p)
+	p.firstName = strings.ToUpper(p.firstName)
+	p.lastName = strings.ToUpper(p.lastName)
+}
+
+//无论调用者是值还是指针，方法都支持运行: 将值对象作为接收者,值传递；
 func (p Person) fullName(segment string) string {
+	fmt.Printf("fullName 函数里接收到struct的内存地址是：%p\n", &p)
 	return p.firstName + segment + p.lastName
 }
 
-//将指针作为接收者,引用传递；Go会帮我们自动解引用，无论调用者是值还是指针，方法都支持运行
+//无论调用者是值还是指针，方法都支持运行,Go会帮我们自动解引用: 将指针对象作为接收者,引用传递；
 func (p *Person) SetFirstName(newName string) {
+	fmt.Printf("SetFirstName 函数里接收到struct的内存地址是：%p\n", p)
 	p.firstName = newName
 }
 

@@ -24,30 +24,40 @@ type Config struct {
 //当不能在这些交互中使用 time.Time 时，除非达成一致，否则使用 string 和 RFC 3339 中定义的格式时间戳。默认情况下，Time.UnmarshalText 使用此格式，并可通过 time.RFC3339 在 Time.Format 和 time.Parse 中使用。
 func TestGetTimestamp(t *testing.T) {
 
-	createTimeEnd := time.Unix(0, 0).Format("2006-01-02 15:04:05")
-	fmt.Println("--", createTimeEnd)
+	//createTimeEnd := time.Unix(0, 0).Format("2006-01-02 15:04:05")
+	//fmt.Println("--", createTimeEnd)
 
 	noe := time.Now()
 	//获取24h后的时刻
-	maybeNewDay := noe.Add(24 * time.Hour)
-	fmt.Println(maybeNewDay)
+	//maybeNewDay := noe.Add(24 * time.Hour)
+	//fmt.Println(maybeNewDay)
 
-	//获取上一个日历日
-	newDay := noe.AddDate(0 /* years */, 0 /* months */, -1 /* days */)
-	fmt.Println(newDay)
+	//获取上一个日历日： 注意内部逻辑问题：如：8月31号 加一个月后 会变成 9月31号(不存在) => 10月1号
+	newDay := noe.AddDate(0 /* years */, 1 /* months */, 0 /* days */)
+	fmt.Println("==", newDay)
 
-	//获取下一个日历日10am
-	now := time.Now()
-	next := now.Add(time.Hour * 24)
-	next = time.Date(next.Year(), next.Month(), next.Day(), 10, 0, 0, 0, next.Location())
+	nextDay := time.Date(noe.Year(), noe.Month(), 1, 0, 0, 0, 0, noe.Location())
+	nextMonthFirstDay := nextDay.AddDate(0 /* years */, 1 /* months */, 0 /* days */)
+	fmt.Println("==", nextMonthFirstDay)
 
-	duration := time.Now().Sub(time.Unix(time.Now().Unix(), 0))
-	if duration > 30*time.Minute {
-
-	}
+	//
+	////获取下一个日历日10am
+	//now := time.Now()
+	//next := now.Add(time.Hour * 24)
+	//next = time.Date(next.Year(), next.Month(), next.Day(), 10, 0, 0, 0, next.Location())
+	//fmt.Println("==" , newDay)
+	//
+	//
+	//duration := time.Now().Sub(time.Unix(time.Now().Unix(), 0))
+	//if duration > 30*time.Minute {
+	//
+	//}
 
 }
 
+/*
+日期字符串、Unix => Time
+*/
 func TestCovert(t *testing.T) {
 	//date -> timestamp
 	dateStr := "2020-08-11"
