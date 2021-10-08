@@ -1,6 +1,5 @@
 /*
-一个基准测试的例子：将一个int类型转为string类型，标准库里还有几种方法，我们看下哪种性能更加.
-
+拼接字符串，比较标准库中的几种方法，看下哪种性能更好？
 */
 package main
 
@@ -18,6 +17,7 @@ const (
 
 var expected = strings.Repeat(sss, 10000)
 
+// +
 func BenchmarkStringConcat(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -29,10 +29,11 @@ func BenchmarkStringConcat(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }
 
+//  fmt.Sprintf()
 func BenchmarkStringSprintf(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -44,10 +45,11 @@ func BenchmarkStringSprintf(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }
 
+// strings.Join()
 func BenchmarkStringJoin(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -59,10 +61,11 @@ func BenchmarkStringJoin(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }
 
+// bytes.Buffer.WriteString()
 func BenchmarkBufferWrite(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -74,10 +77,11 @@ func BenchmarkBufferWrite(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }
 
+// append()
 func BenchmarkBytesAppend(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -90,29 +94,11 @@ func BenchmarkBytesAppend(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }
 
-func BenchmarkStringCopy(b *testing.B) {
-	var result string
-	for n := 0; n < b.N; n++ {
-		tsl := len(sss) * cnt
-		bs := make([]byte, tsl)
-		bl := 0
-
-		for bl < tsl {
-			bl += copy(bs[bl:], sss)
-		}
-
-		result = string(bs)
-	}
-	b.StopTimer()
-	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
-	}
-}
-
+// strings.Builder.WriteString()
 func BenchmarkStringBuilder(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
@@ -126,6 +112,27 @@ func BenchmarkStringBuilder(b *testing.B) {
 	}
 	b.StopTimer()
 	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", string(result), expected)
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
+	}
+}
+
+// copy()
+func BenchmarkStringCopy(b *testing.B) {
+	var result string
+	for n := 0; n < b.N; n++ {
+		tsl := len(sss) * cnt
+		bs := make([]byte, tsl)
+		bl := 0
+
+		for bl < tsl {
+			bl += copy(bs[bl:], sss)
+		}
+
+		result = string(bs)
+		// 		result = convert.Bytes2str(bs)  性能再提升
+	}
+	b.StopTimer()
+	if result != expected {
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
 	}
 }

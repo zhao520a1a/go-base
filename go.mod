@@ -10,6 +10,7 @@ require (
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/shawnfeng/sutil v1.4.11
 	github.com/stretchr/testify v1.7.0
+	github.com/stretchrcom/testify v1.2.2
 	gitlab.pri.ibanyu.com/middleware/seaweed v1.2.2-0.20200811031803-cd7e44ed3710
 	gitlab.pri.ibanyu.com/quality/dry.git v0.0.0-20210604035537-abd8df0a7cb1
 )
