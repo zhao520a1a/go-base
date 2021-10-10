@@ -81,23 +81,6 @@ func BenchmarkBufferWrite(b *testing.B) {
 	}
 }
 
-// append()
-func BenchmarkBytesAppend(b *testing.B) {
-	var result string
-	for n := 0; n < b.N; n++ {
-		var bbb []byte
-
-		for i := 0; i < cnt; i++ {
-			bbb = append(bbb, sss...)
-		}
-		result = string(bbb)
-	}
-	b.StopTimer()
-	if result != expected {
-		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
-	}
-}
-
 // strings.Builder.WriteString()
 func BenchmarkStringBuilder(b *testing.B) {
 	var result string
@@ -109,6 +92,23 @@ func BenchmarkStringBuilder(b *testing.B) {
 		}
 
 		result = builder.String()
+	}
+	b.StopTimer()
+	if result != expected {
+		b.Errorf("unexpected result; got=%s, want=%s", result, expected)
+	}
+}
+
+// append()
+func BenchmarkBytesAppend(b *testing.B) {
+	var result string
+	for n := 0; n < b.N; n++ {
+		var bbb []byte
+
+		for i := 0; i < cnt; i++ {
+			bbb = append(bbb, sss...)
+		}
+		result = string(bbb)
 	}
 	b.StopTimer()
 	if result != expected {
