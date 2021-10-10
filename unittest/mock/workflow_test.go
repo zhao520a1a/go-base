@@ -1,9 +1,8 @@
-package grpc
+package mock
 
 import (
 	"context"
 	"database/sql"
-	"github.com/zhao520a1a/go-base.git/unittest/mock"
 	"github.com/zhao520a1a/go-base.git/unittest/mock/bpm"
 	"github.com/zhao520a1a/go-base.git/unittest/mock/db"
 	"github.com/zhao520a1a/go-base.git/unittest/mock/test"
@@ -22,7 +21,7 @@ func (m *WorkflowControllerTestSuite) SetupTest() {
 	m.testingDBName = "testing_bpm"
 	m.testingDB = test.SetupTestingMySQL(m.testingDBName)
 
-	_ = &mock.ConfigService{
+	_ = &ConfigService{
 		GetNotifierEmailFlagFn: func(ctx context.Context) (bool, error) {
 			return false, nil
 		},
@@ -31,9 +30,9 @@ func (m *WorkflowControllerTestSuite) SetupTest() {
 		},
 	}
 
-	_ = mock.NewDBManagerMock(db.BPMDBCluster, db.WorkflowTable, m.testingDB)
+	_ = NewDBManagerMock(db.BPMDBCluster, db.WorkflowTable, m.testingDB)
 
-	_ = &mock.Notifier{
+	_ = &Notifier{
 		NotifyFn: func(ctx context.Context, notif *bpm.Notification) (err error) {
 			return
 		},
