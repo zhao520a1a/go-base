@@ -3,48 +3,36 @@ package mock
 import (
 	"context"
 	"database/sql"
-	"fmt"
-	"github.com/zhao520a1a/go-base.git/unittest/mock/db"
-	"gitlab.pri.ibanyu.com/quality/dry.git/errors"
 
-	"gitlab.pri.ibanyu.com/middleware/seaweed/xsql/manager"
+	"github.com/zhao520a1a/go-base.git/unittest/mock/db"
 )
 
 type DBManager struct {
-	BeginFn      func(ctx context.Context) (*manager.Tx, error)
+	BeginFn      func(ctx context.Context) (*sql.Tx, error)
 	BeginInvoked bool
 
-	GetDBFn      func(ctx context.Context) (*manager.DB, error)
+	GetDBFn      func(ctx context.Context) (*sql.DB, error)
 	GetDBInvoked bool
 }
 
-func (m *DBManager) Begin(ctx context.Context) (*manager.Tx, error) {
+func (m *DBManager) Begin(ctx context.Context) (*sql.Tx, error) {
 	m.BeginInvoked = true
 	return m.BeginFn(ctx)
 }
 
-func (m *DBManager) GetDB(ctx context.Context) (*manager.DB, error) {
+func (m *DBManager) GetDB(ctx context.Context) (*sql.DB, error) {
 	m.GetDBInvoked = true
 	return m.GetDBFn(ctx)
 }
 
 func NewDBManagerMock(cluster, table string, sdb *sql.DB) db.DBManager {
-	begin := func(ctx context.Context) (*manager.Tx, error) {
-		op := errors.Op("DB.Begin")
-		db, err := manager.GetDB(ctx, cluster, table)
-		if err != nil {
-			err = fmt.Errorf("%s get db err %v", op, err)
-			return nil, err
-		}
-		return db.Begin(ctx)
+	begin := func(ctx context.Context) (tx *sql.Tx, err error) {
+		// TODO
+		return
 	}
 
-	getDB := func(ctx context.Context) (db *manager.DB, err error) {
-		db, err = manager.GetDB(ctx, cluster, table)
-		if err != nil {
-			return
-		}
-		db.SetSQLDB(sdb)
+	getDB := func(ctx context.Context) (db *sql.DB, err error) {
+		// TODO
 		return
 	}
 

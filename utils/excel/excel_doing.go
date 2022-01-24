@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize/v2"
-	"gitlab.pri.ibanyu.com/middleware/seaweed/xlog"
-	"gitlab.pri.ibanyu.com/quality/dry.git/errors"
+	"log"
 	"reflect"
 	"runtime/debug"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize/v2"
+	"github.com/zhao520a1a/go-utils/errors"
 )
 
 // Tips:
@@ -142,7 +143,7 @@ func resolveDataFromRows(ctx context.Context, rows [][]string, titleRowIndex, sk
 		row := rows[i]
 		// Empty row will be skipped.
 		if len(row) == 0 {
-			xlog.Warnf(ctx, "%s excel row num %d data is empty", op, i+1)
+			log.Printf("%s excel row num %d data is empty", op, i+1)
 			continue
 		}
 		columnMap := make(map[string]string, len(titleRow))

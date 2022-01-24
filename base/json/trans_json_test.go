@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"gitlab.pri.ibanyu.com/quality/dry.git/errors"
 	"strconv"
 	"testing"
+
+	"github.com/zhao520a1a/go-utils/errors"
 )
 
 //测试空字符、nil Json转码

@@ -14,16 +14,13 @@ func TestStartByTimeDot(t *testing.T) {
 	go func() {
 		go StartByTimeDot(ctx)
 		//go defaultManage.StartByTimePeriod(ctx)
-		time.Sleep(1 * time.Minute)
+		time.Sleep(1 * time.Second)
 		ch <- 1
 	}()
 	<-ch
-
 }
-
 func TestStartPeriodFun(t *testing.T) {
 	ctx := context.Background()
-
 	var ch chan int
 	go StartPeriodFun(ctx, 2*time.Minute, func(fctx context.Context) (err error) {
 		err = Reload(fctx)

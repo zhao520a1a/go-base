@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"sync"
 
-	"gitlab.pri.ibanyu.com/quality/dry.git/errors"
-
 	"github.com/gogo/protobuf/proto"
-	"github.com/shawnfeng/sutil/scrypto"
+	"github.com/zhao520a1a/go-utils/errors"
 )
 
 const iv = "NfHK5a84jjJkwzff"
@@ -76,11 +74,13 @@ func EncryptText(ctx context.Context, text string) (cipherText string, err error
 		return "", nil
 	}
 
-	sign, err := scrypto.CBCPKCS5PaddingAesEncrypt([]byte(salt), []byte(iv), []byte(text))
-	if err != nil {
-		err = errors.E(op, fmt.Errorf("err %v text %s salt %s", err, text, salt))
-		return
-	}
+	// TODO scrypto
+	var sign []byte
+	//sign, err := scrypto.CBCPKCS5PaddingAesEncrypt([]byte(salt), []byte(iv), []byte(text))
+	//if err != nil {
+	//	err = errors.E(op, fmt.Errorf("err %v text %s salt %s", err, text, salt))
+	//	return
+	//}
 
 	info := &EncryptedInfo{
 		Version: int32(version),
@@ -119,11 +119,13 @@ func DecryptText(ctx context.Context, cipherText string) (text string, err error
 		return
 	}
 
-	textBytes, err := scrypto.CBCPKCS5PaddingAesDecrypt([]byte(salt), []byte(iv), info.Sign)
-	if err != nil {
-		err = errors.E(op, fmt.Errorf("aes decrypt err %v", err))
-		return
-	}
+	// TODO scrypto
+	var textBytes string
+	//textBytes, err := scrypto.CBCPKCS5PaddingAesDecrypt([]byte(salt), []byte(iv), info.Sign)
+	//if err != nil {
+	//	err = errors.E(op, fmt.Errorf("aes decrypt err %v", err))
+	//	return
+	//}
 
 	text = string(textBytes)
 	return

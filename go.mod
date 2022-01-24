@@ -4,14 +4,11 @@ go 1.16
 
 require (
 	github.com/360EntSecGroup-Skylar/excelize/v2 v2.2.0
-	github.com/HdrHistogram/hdrhistogram-go v1.1.0 // indirect
-	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.3.3
-	github.com/julienschmidt/httprouter v1.2.0
 	github.com/olebedev/config v0.0.0-20190528211619-364964f3a8e4
-	github.com/shawnfeng/sutil v1.4.11
-	github.com/stretchr/testify v1.7.0
-	gitlab.pri.ibanyu.com/middleware/seaweed v1.2.2-0.20200811031803-cd7e44ed3710
-	gitlab.pri.ibanyu.com/quality/dry.git v0.0.0-20210604035537-abd8df0a7cb1
+	github.com/stretchr/testify v1.7.1-0.20210824115523-ab6dc3262822
+	github.com/zhao520a1a/go-utils v0.0.0-20211018144918-800f27d810a2
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

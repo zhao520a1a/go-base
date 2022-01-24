@@ -1,14 +1,10 @@
 package test
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strings"
-
-	"gitlab.pri.ibanyu.com/middleware/seaweed/xlog"
 
 	"github.com/olebedev/config"
 )
@@ -31,9 +27,7 @@ func Fixture(db *sql.DB, filename string) {
 }
 
 func SetupTestingMySQL(dbName string) *sql.DB {
-	ctx := context.TODO()
-	dir, _ := os.Getwd()
-	xlog.Infof(ctx, "dir %s", dir)
+	//dir, _ := os.Getwd()
 	file, err := ioutil.ReadFile("./test/settings.yaml")
 	user := "root"
 	password := ""

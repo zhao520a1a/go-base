@@ -3,7 +3,7 @@ package time
 import (
 	"context"
 	"fmt"
-	"gitlab.pri.ibanyu.com/middleware/seaweed/xlog"
+	"log"
 	"time"
 )
 
@@ -12,23 +12,20 @@ const reloadPeriodInMinutes = 5
 // 封装一个定时函数
 func StartPeriodFun(ctx context.Context, after time.Duration, targetFun func(context.Context) error) {
 	fun := "StartPeriodFun -->"
-	isBreak := false
 
+TimedLoop:
 	for {
-		select {
-		case <-time.After(after):
-			xlog.Infof(ctx, "%s start next round", fun)
-		case <-ctx.Done():
-			xlog.Infof(ctx, "%s about to exit", fun)
-			isBreak = true
-		}
-		if isBreak {
-			break
-		}
-
 		err := targetFun(ctx)
 		if err != nil {
-			xlog.Warnf(ctx, "%s call target fun err:%v", fun, err)
+			log.Printf("%s call target fun err:%v", fun, err)
+		}
+
+		select {
+		case <-time.After(after):
+			log.Printf("%s start next round", fun)
+		case <-ctx.Done():
+			log.Printf("%s about to exit", fun)
+			break TimedLoop
 		}
 	}
 }
@@ -59,14 +56,14 @@ TimedLoop:
 	for {
 		err := Reload(ctx)
 		if err != nil {
-			xlog.Errorf(ctx, "%s err:%v", fun, err)
+			log.Printf("call target fun err:%v", err)
 		}
 
 		select {
 		case <-time.After(reloadPeriodInMinutes * time.Minute):
-			xlog.Infof(ctx, "%s start next round", fun)
+			log.Printf("%s start next round", fun)
 		case <-ctx.Done():
-			xlog.Infof(ctx, "%s about to exit", fun)
+			log.Printf("%s about to exit", fun)
 			break TimedLoop
 		}
 	}
@@ -85,7 +82,7 @@ TimedLoop:
 	for {
 		err := Reload(ctx)
 		if err != nil {
-			xlog.Errorf(ctx, "%s err:%v", fun, err)
+			log.Printf("call target fun err:%v", err)
 		}
 
 		now := time.Now()
@@ -95,9 +92,9 @@ TimedLoop:
 
 		select {
 		case <-t.C:
-			xlog.Infof(ctx, "%s start next round", fun)
+			log.Printf("%s start next round", fun)
 		case <-ctx.Done():
-			xlog.Infof(ctx, "%s about to exit", fun)
+			log.Printf("%s about to exit", fun)
 			break TimedLoop
 		}
 	}
