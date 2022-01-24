@@ -201,6 +201,9 @@ func (s Stream) Tail(n int64) Stream {
 
 其实这里是不能用数组的，因为不知道 Stream 写入 source 的操作往往是在协程异步写入的，每个 Stream 中的 channel 都可能在动态变化，用流水线来比喻 Stream 工作流程的确非常形象。
 
+### 使用 Demo
+https://github.com/zhao520a1a/go-base/blob/master/guide/stream/stream_test.go
+
 
 ### 参考
 - [https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew](https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew)
