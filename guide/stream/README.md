@@ -33,6 +33,92 @@ Filter(filterFunc FilterFunc, opts ...Option) Stream
 
 ### [源码分析](https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew)
 
+#### 为什么获取 s.source 时用切片来接收呢? 切片会自动扩容，用数组不是更好吗?
+
+其实这里是不能用数组的，因为不知道 Stream 写入 source 的操作往往是在协程异步写入的，每个 Stream 中的 channel 都可能在动态变化，用流水线来比喻 Stream 工作流程的确非常形象。
+
+#### Tail：使用环形切片去获取后 n 个元素
+
+环形切片的特点：
+
+- 支持自动滚动更新
+- 节省内存 利用环形切片在固定容量满的情况下旧数据不断被新数据覆盖的特点，可以用于读取 channel 后 n 个元素。
+
+``` go
+// 环形切片
+type Ring struct {
+  elements []interface{}
+  index    int
+  lock     sync.Mutex
+}
+
+func NewRing(n int) *Ring {
+  if n < 1 {
+    panic("n should be greather than 0")
+  }
+  return &Ring{
+    elements: make([]interface{}, n),
+  }
+}
+
+// 添加元素
+func (r *Ring) Add(v interface{}) {
+  r.lock.Lock()
+  defer r.lock.Unlock()
+  // 将元素写入切片指定位置
+  // 这里的取余实现了循环写效果
+  r.elements[r.index%len(r.elements)] = v
+  // 更新下次写入位置
+  r.index++
+}
+
+// 获取全部元素
+// 读取顺序保持与写入顺序一致
+func (r *Ring) Take() []interface{} {
+  r.lock.Lock()
+  defer r.lock.Unlock()
+
+  var size int
+  var start int
+  // 当出现循环写的情况时
+  // 开始读取位置需要通过去余实现,因为我们希望读取出来的顺序与写入顺序一致
+  if r.index > len(r.elements) {
+    size = len(r.elements)
+    // 因为出现循环写情况,当前写入位置index开始为最旧的数据
+    start = r.index % len(r.elements)
+  } else {
+    size = r.index
+  }
+  elements := make([]interface{}, size)
+  for i := 0; i < size; i++ {
+    // 取余实现环形读取,读取顺序保持与写入顺序一致
+    elements[i] = r.elements[(start+i)%len(r.elements)]
+  }
+
+  return elements
+}
+
+func (s Stream) Tail(n int64) Stream {
+  if n < 1 {
+    panic("n must be greather than 1")
+  }
+  source := make(chan interface{})
+  go func() {
+    ring := collection.NewRing(int(n))
+    // 读取全部元素，如果数量>n环形切片能实现新数据覆盖旧数据
+    // 保证获取到的一定最后n个元素
+    for item := range s.source {
+      ring.Add(item)
+    }
+    for _, item := range ring.Take() {
+      source <- item
+    }
+    close(source)
+  }()
+  return Range(source)
+}
+```
+
 ![img.png](img.png)
 
 ### API 使用
