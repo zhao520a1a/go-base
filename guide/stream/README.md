@@ -109,7 +109,9 @@ func From(generate GenerateFunc) Stream
 
 ![img.png](img.png)
 
-### [源码分析](https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew)
+### 源码分析
+
+> 源码：https://github.com/zeromicro/go-zero/blob/master/core/fx/stream.go
 
 #### Tail：使用环形切片去获取后 n 个元素
 
@@ -201,5 +203,4 @@ func (s Stream) Tail(n int64) Stream {
 
 
 ### 参考
-源码：https://github.com/zeromicro/go-zero/blob/master/core/fx/stream.go
-文章：https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew
+- [https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew](https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew)
