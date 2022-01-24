@@ -2,11 +2,87 @@
 
 Stream 能让我们支持链式调用和函数编程的风格来实现数据的处理，看起来数据像是在流水线一样不断的实时流转加工，最终被汇总。Stream 的实现思想就是将数据处理流程抽象成了一个数据流，每次加工后返回一个新的流供使用。
 
+
+### API 定义
+
+Stream 的工作流程其实也属于生产消费者模型，整个流程跟工厂中的生产流程非常相似，尝试先定义一下 Stream 的生命周期：
+
+- 创建阶段/数据获取（原料）
+- 加工阶段/中间处理（流水线加工） 
+- 汇总阶段/终结操作（最终产品）
+
+下面围绕 stream 的三个生命周期开始定义 API：
+
+#### 创建阶段 API
+
+``` go
+// 通过 channel 创建 stream
+func Range(source <-chan interface{}) Stream
+
+// 通过可变参数模式创建 stream
+func Just(items ...interface{}) Stream
+
+// 通过函数创建 stream
+func From(generate GenerateFunc) Stream
+
+```
+ 
+#### 加工阶段 API
+
+``` go
+  // 去除重复item
+  Distinct(keyFunc KeyFunc) Stream
+  // 按条件过滤item
+  Filter(filterFunc FilterFunc, opts ...Option) Stream
+  // 分组
+  Group(fn KeyFunc) Stream
+  // 返回前n个元素
+  Head(n int64) Stream
+  // 返回后n个元素
+  Tail(n int64) Stream
+  // 获取第一个元素
+  First() interface{}
+  // 获取最后一个元素
+  Last() interface{}
+  // 转换对象
+  Map(fn MapFunc, opts ...Option) Stream
+  // 合并item到slice生成新的stream
+  Merge() Stream
+  // 反转
+  Reverse() Stream
+  // 排序
+  Sort(fn LessFunc) Stream
+  // 作用在每个item上
+  Walk(fn WalkFunc, opts ...Option) Stream
+  // 聚合其他Stream
+  Concat(streams ...Stream) Stream
+``` 
+
+#### 汇总阶段 API
+
+``` go
+  // 检查是否全部匹配
+  AllMatch(fn PredicateFunc) bool
+  // 检查是否存在至少一项匹配
+  AnyMatch(fn PredicateFunc) bool
+  // 检查全部不匹配
+  NoneMatch(fn PredicateFunc) bool
+  // 统计数量
+  Count() int
+  // 清空stream
+  Done()
+  // 对所有元素执行操作
+  ForAll(fn ForAllFunc)
+  // 对每个元素执行操作
+  ForEach(fn ForEachFunc)
+```
+
+
 ### 设计实现
 
 #### 如何实现链式调用
 
-链式调用，创建对象用到的 builder 模式可以达到链式调用效果。实际上 Stream 实现类似链式的效果原理也是一样的，每次调用完后都创建一个新的 Stream 返回给用户。
+创建对象用到的 builder 模式可以达到链式调用效果。实际是每次调用完后都创建一个新的 Stream 返回给用户。
 
 ``` go
 
@@ -32,11 +108,9 @@ int sum = widgets.stream()
 - 协程
 - 函数式编程
 
+![img.png](img.png)
+
 ### [源码分析](https://mp.weixin.qq.com/s/t3INtSfFSmv-nsJqLmdPew)
-
-#### 为什么获取 s.source 时用切片来接收呢? 切片会自动扩容，用数组不是更好吗?
-
-其实这里是不能用数组的，因为不知道 Stream 写入 source 的操作往往是在协程异步写入的，每个 Stream 中的 channel 都可能在动态变化，用流水线来比喻 Stream 工作流程的确非常形象。
 
 #### Tail：使用环形切片去获取后 n 个元素
 
@@ -122,100 +196,7 @@ func (s Stream) Tail(n int64) Stream {
 }
 ```
 
-![img.png](img.png)
+#### 为什么获取 s.source 时用切片来接收呢? 切片会自动扩容，用数组不是更好吗?
 
-### API 使用
-
-Stream 的工作流程其实也属于生产消费者模型，整个流程跟工厂中的生产流程非常相似，尝试先定义一下 Stream 的生命周期：
-
-创建阶段/数据获取（原料） 加工阶段/中间处理（流水线加工） 汇总阶段/终结操作（最终产品） 下面围绕 stream 的三个生命周期开始定义 API：
-
-#### 创建阶段 API
-
-##### channel 创建 Range
-
-``` go
-  return Stream{  
-    source: source,  
-  }  
-}
-```
-
-##### 可变参数模式创建 Just
-
-``` go
-// 通过可变参数模式创建 stream，channel 写完后及时 close 是个好习惯。
-func Just(items ...interface{}) Stream {
-  source := make(chan interface{}, len(items))
-  for _, item := range items {
-    source <- item
-  }
-  close(source)
-  return Range(source)
-}
-```
-
-##### 函数创建 From
-
-``` go
-// 通过函数创建 Stream
-func From(generate GenerateFunc) Stream {
-  source := make(chan interface{})
-  threading.GoSafe(func() {
-    defer close(source)
-    generate(source)
-  })
-  return Range(source)
-}
-```
-
-#### 加工阶段 API
-
-``` go
-  // 去除重复item
-  Distinct(keyFunc KeyFunc) Stream
-  // 按条件过滤item
-  Filter(filterFunc FilterFunc, opts ...Option) Stream
-  // 分组
-  Group(fn KeyFunc) Stream
-  // 返回前n个元素
-  Head(n int64) Stream
-  // 返回后n个元素
-  Tail(n int64) Stream
-  // 获取第一个元素
-  First() interface{}
-  // 获取最后一个元素
-  Last() interface{}
-  // 转换对象
-  Map(fn MapFunc, opts ...Option) Stream
-  // 合并item到slice生成新的stream
-  Merge() Stream
-  // 反转
-  Reverse() Stream
-  // 排序
-  Sort(fn LessFunc) Stream
-  // 作用在每个item上
-  Walk(fn WalkFunc, opts ...Option) Stream
-  // 聚合其他Stream
-  Concat(streams ...Stream) Stream
-``` 
-
-#### 汇总阶段 API
-
-``` go
-  // 检查是否全部匹配
-  AllMatch(fn PredicateFunc) bool
-  // 检查是否存在至少一项匹配
-  AnyMatch(fn PredicateFunc) bool
-  // 检查全部不匹配
-  NoneMatch(fn PredicateFunc) bool
-  // 统计数量
-  Count() int
-  // 清空stream
-  Done()
-  // 对所有元素执行操作
-  ForAll(fn ForAllFunc)
-  // 对每个元素执行操作
-  ForEach(fn ForEachFunc)
-```
+其实这里是不能用数组的，因为不知道 Stream 写入 source 的操作往往是在协程异步写入的，每个 Stream 中的 channel 都可能在动态变化，用流水线来比喻 Stream 工作流程的确非常形象。
 
