@@ -8,7 +8,7 @@ Stream 能让我们支持链式调用和函数编程的风格来实现数据的�
 
 链式调用，创建对象用到的 builder 模式可以达到链式调用效果。实际上 Stream 实现类似链式的效果原理也是一样的，每次调用完后都创建一个新的 Stream 返回给用户。
 
-```
+``` go
 // 去除重复item
 Distinct(keyFunc KeyFunc) Stream
 // 按条件过滤item
@@ -140,7 +140,7 @@ Stream 的工作流程其实也属于生产消费者模型，整个流程跟工�
 
 ##### 可变参数模式创建 Just
 
-```
+``` go
 // 通过可变参数模式创建 stream，channel 写完后及时 close 是个好习惯。
 func Just(items ...interface{}) Stream {
   source := make(chan interface{}, len(items))
@@ -154,7 +154,7 @@ func Just(items ...interface{}) Stream {
 
 ##### 函数创建 From
 
-```
+``` go
 // 通过函数创建 Stream
 func From(generate GenerateFunc) Stream {
   source := make(chan interface{})
@@ -168,7 +168,7 @@ func From(generate GenerateFunc) Stream {
 
 #### 加工阶段 API
 
-``` 
+``` go
   // 去除重复item
   Distinct(keyFunc KeyFunc) Stream
   // 按条件过滤item
@@ -199,7 +199,7 @@ func From(generate GenerateFunc) Stream {
 
 #### 汇总阶段 API
 
-``` 
+``` go
   // 检查是否全部匹配
   AllMatch(fn PredicateFunc) bool
   // 检查是否存在至少一项匹配
@@ -214,7 +214,5 @@ func From(generate GenerateFunc) Stream {
   ForAll(fn ForAllFunc)
   // 对每个元素执行操作
   ForEach(fn ForEachFunc)
-
-
 ```
 
