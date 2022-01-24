@@ -9,10 +9,11 @@ Stream 能让我们支持链式调用和函数编程的风格来实现数据的�
 链式调用，创建对象用到的 builder 模式可以达到链式调用效果。实际上 Stream 实现类似链式的效果原理也是一样的，每次调用完后都创建一个新的 Stream 返回给用户。
 
 ``` go
-// 去除重复item
-Distinct(keyFunc KeyFunc) Stream
-// 按条件过滤item
-Filter(filterFunc FilterFunc, opts ...Option) Stream
+
+int sum = widgets.stream()
+              .filter(w -> w.getColor() == RED)
+              .mapToInt(w -> w.getWeight())
+              .sum();
 ```
 
 #### 如何实现流水线的处理效果
