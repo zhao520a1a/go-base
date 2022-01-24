@@ -2,6 +2,13 @@
 
 Stream 能让我们支持链式调用和函数编程的风格来实现数据的处理，看起来数据像是在流水线一样不断的实时流转加工，最终被汇总。Stream 的实现思想就是将数据处理流程抽象成了一个数据流，每次加工后返回一个新的流供使用。
 
+``` go
+
+int sum = widgets.stream()
+              .filter(w -> w.getColor() == RED)
+              .mapToInt(w -> w.getWeight())
+              .sum();
+```
 
 ### API 定义
 
@@ -83,14 +90,6 @@ func From(generate GenerateFunc) Stream
 #### 如何实现链式调用
 
 创建对象用到的 builder 模式可以达到链式调用效果。实际是每次调用完后都创建一个新的 Stream 返回给用户。
-
-``` go
-
-int sum = widgets.stream()
-              .filter(w -> w.getColor() == RED)
-              .mapToInt(w -> w.getWeight())
-              .sum();
-```
 
 #### 如何实现流水线的处理效果
 
