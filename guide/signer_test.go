@@ -35,5 +35,4 @@ func TestSigner(t *testing.T) {
 	}
 
 	fmt.Sprintln(s.Sign())
-
 }
