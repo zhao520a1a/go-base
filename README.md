@@ -13,13 +13,6 @@
 [https://books.studygolang.com/gobyexample/string-formatting/]
 
 
-
-### 启动服务
-```
-./service.git --serv=base/uauth --stype=local --logdir=./log --skey=30 &
-
-```
-
 ### 交叉编译
 ``` ~~~~~~~~
 GOOS=linux GOARCH=amd64 go build  hello.go
