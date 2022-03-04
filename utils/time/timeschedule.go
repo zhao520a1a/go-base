@@ -7,11 +7,9 @@ import (
 	"time"
 )
 
-const reloadPeriodInMinutes = 5
-
-// 封装一个定时函数
-func StartPeriodFun(ctx context.Context, after time.Duration, targetFun func(context.Context) error) {
-	fun := "StartPeriodFun -->"
+// StartByTimePeriod 定时：时间段处理一次
+func StartByTimePeriod(ctx context.Context, after time.Duration, targetFun func(context.Context) error) {
+	fun := "StartByTimePeriod -->"
 
 TimedLoop:
 	for {
@@ -48,46 +46,20 @@ func StartByTimePeriod1(ctx context.Context) {
 	}
 }
 
-// StartByTimePeriod 定时：时间段处理一次
-func StartByTimePeriod(ctx context.Context) {
-	fun := "Manager.StartSync -->"
-
-TimedLoop:
-	for {
-		err := Reload(ctx)
-		if err != nil {
-			log.Printf("call target fun err:%v", err)
-		}
-
-		select {
-		case <-time.After(reloadPeriodInMinutes * time.Minute):
-			log.Printf("%s start next round", fun)
-		case <-ctx.Done():
-			log.Printf("%s about to exit", fun)
-			break TimedLoop
-		}
-	}
-}
-
-func Reload(ctx context.Context) (err error) {
-
-	return nil
-}
-
 // StartByTimeDot 定时：每天固定时间点处理一次
-func StartByTimeDot(ctx context.Context) {
+func StartByTimeDot(ctx context.Context, hourDot int, targetFun func(context.Context) error) {
 	fun := "Manager.StartSync -->"
 
 TimedLoop:
 	for {
-		err := Reload(ctx)
+		err := targetFun(ctx)
 		if err != nil {
 			log.Printf("call target fun err:%v", err)
 		}
 
 		now := time.Now()
 		next := now.Add(time.Hour * 24)
-		next = time.Date(next.Year(), next.Month(), next.Day(), 10, 0, 0, 0, next.Location())
+		next = time.Date(next.Year(), next.Month(), next.Day(), hourDot, 0, 0, 0, next.Location())
 		t := time.NewTimer(next.Sub(now))
 
 		select {
