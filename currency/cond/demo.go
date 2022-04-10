@@ -1,4 +1,4 @@
-package cond
+package main
 
 import (
 	"fmt"
