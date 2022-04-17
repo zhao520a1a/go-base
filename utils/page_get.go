@@ -11,27 +11,25 @@ func ListByPage(ctx context.Context) {
 	pageSize := 50
 	for i := 0; i < len(uids); i += pageSize {
 		uidList := uids[i:MinInt(i+pageSize, len(uids))]
-		//rpc call with uidList
+		// rpc call with uidList
 		fmt.Println(uidList)
 	}
 	return
 }
 
 // 分页返回
-func PageQuery(offset, limit int64) {
-
-	var processList []int
-	total := int64(len(processList))
+func PageQuery(dataList []string, offset, limit int) (pageDataList []string) {
+	total := len(dataList)
 	if total > offset {
 		if total > offset+limit {
-			processList = processList[offset : offset+limit]
-		} else {
-			processList = processList[offset:total]
+			pageDataList = dataList[offset : offset+limit]
+			return
 		}
+		pageDataList = dataList[offset:total]
+		return
 	}
-
-	processList = processList[MinInt64(offset, total):MinInt64(offset+limit, total)]
-
+	pageDataList = dataList[MinInt(offset, total):MinInt(offset+limit, total)]
+	return
 }
 
 func MinInt(a, b int) int {
