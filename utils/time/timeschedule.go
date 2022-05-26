@@ -2,7 +2,6 @@ package time
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 )
@@ -11,6 +10,7 @@ import (
 func StartByTimePeriod(ctx context.Context, after time.Duration, targetFun func(context.Context) error) {
 	fun := "StartByTimePeriod -->"
 
+	// 方式1
 TimedLoop:
 	for {
 		err := targetFun(ctx)
@@ -26,23 +26,29 @@ TimedLoop:
 			break TimedLoop
 		}
 	}
-}
 
-// StartByTimePeriod1 使用 Tick/Sleep 每隔100毫秒打印“Hello TigerwolfC”
-func StartByTimePeriod1(ctx context.Context) {
-	// 方式1
-	for range time.Tick(time.Millisecond * 100) {
-		fmt.Println("Hello TigerwolfC")
-	}
 	// 方式2
-	ticker := time.NewTicker(time.Millisecond * 100)
-	for range ticker.C {
-		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+	for range time.Tick(after) {
+		err := targetFun(ctx)
+		if err != nil {
+			log.Printf("%s call target fun err:%v", fun, err)
+		}
 	}
 	// 方式3
+	ticker := time.NewTicker(after)
+	for range ticker.C {
+		err := targetFun(ctx)
+		if err != nil {
+			log.Printf("%s call target fun err:%v", fun, err)
+		}
+	}
+	// 方式4
 	for {
-		time.Sleep(time.Millisecond * 100)
-		fmt.Println("Hello TigerwolfC")
+		time.Sleep(after)
+		err := targetFun(ctx)
+		if err != nil {
+			log.Printf("%s call target fun err:%v", fun, err)
+		}
 	}
 }
 
