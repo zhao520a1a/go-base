@@ -7,7 +7,6 @@ import (
 
 // SafeFunWrapperWithArgs 给运行的函数f封装，避免panic导致全局退出
 func SafeFunWrapperWithArgs(f func(args ...interface{}), args ...interface{}) (err error) {
-
 	defer func() {
 		if ok := recover(); ok != nil {
 			err = DumpStack(ok)
@@ -19,7 +18,6 @@ func SafeFunWrapperWithArgs(f func(args ...interface{}), args ...interface{}) (e
 }
 
 func SafeFunWrapper(f func()) (err error) {
-
 	defer func() {
 		if ok := recover(); ok != nil {
 			err = DumpStack(ok)
