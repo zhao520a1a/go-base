@@ -11,7 +11,7 @@ import (
 
 type CounterMapManager struct {
 	mu      sync.Mutex
-	dataMap cmap.ConcurrentMap
+	dataMap cmap.ConcurrentMap // map[string]*int64
 }
 
 func NewCounterMapManager() *CounterMapManager {
@@ -26,9 +26,7 @@ func (c *CounterMapManager) Set(key string, value *int64) {
 
 func (c *CounterMapManager) IncrBy(key string, delta int64) {
 	// fast-path
-	value, ok := c.Get(key)
-	if ok {
-		atomic.AddInt64(value, delta)
+	if c.IncrXX(key, delta) {
 		return
 	}
 	c.NewKey(key, delta)
@@ -39,13 +37,21 @@ func (c *CounterMapManager) NewKey(key string, delta int64) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	// slow-path
-	value, ok := c.Get(key)
-	if ok {
-		atomic.AddInt64(value, delta)
+	if c.IncrXX(key, delta) {
 		return
 	}
 	c.Set(key, &delta)
 	return
+}
+
+// IncrXX 仅当key存在时，Incr 才会生效
+func (c *CounterMapManager) IncrXX(key string, delta int64) bool {
+	value, ok := c.Get(key)
+	if ok {
+		atomic.AddInt64(value, delta)
+		return true
+	}
+	return false
 }
 
 func (c *CounterMapManager) Get(key string) (*int64, bool) {
@@ -62,23 +68,30 @@ func (c *CounterMapManager) Reload(ctx context.Context) {
 	var successNum, failNum int64
 	successDataMap := make(map[string]int64)
 	c.dataMap.IterCb(func(key string, v interface{}) {
-		count, ok := v.(int64)
-		if ok {
-			fmt.Printf("key %s val %d", key, count)
-			// 持久化归档
+		value, ok := v.(*int64)
+		if !ok {
+			return
 		}
+		count := *value
+		fmt.Printf("key %s count %d", key, count)
+		// -- 持久化归档操作
+		successNum++
+		successDataMap[key] = count
 	})
 	for key, value := range successDataMap {
+		// check again, not remove data when value changed
 		v, ok := c.dataMap.Get(key)
 		if !ok {
 			continue
 		}
-		newVal, ok := v.(int64)
+		newVal, ok := v.(*int64)
 		if !ok {
 			continue
 		}
-		if value != newVal {
+		if value < *newVal {
 			fmt.Printf("key %s oldVal %d newVal %d not equal", key, value, newVal)
+			// 取差值
+			atomic.AddInt64(newVal, -value)
 			continue
 		}
 		c.dataMap.Remove(key)
