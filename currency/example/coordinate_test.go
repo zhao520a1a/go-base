@@ -1,14 +1,19 @@
-package main
+package example
 
 import (
 	"context"
 	"fmt"
 	"sync"
 	"sync/atomic"
+	"testing"
 	"time"
 )
 
-func main() {
+/*
+分别用 chan、WaitGroup、Context 来协调协程间调用
+*/
+
+func TestCoordinate(t *testing.T) {
 	coordinateWithChan()
 	fmt.Println()
 	coordinateWithWaitGroup()
