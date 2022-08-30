@@ -15,8 +15,8 @@ defer: a d
 func TestDefer1(t *testing.T) {
 	x, y := "a", "b"
 
-	defer func(s string) {
-		println("defer:", s, y) // y 闭包引用 输出延迟后的值 y = "d"
+	defer func(x string) {
+		println("defer:", x, y) // y 闭包引用 输出延迟后的值 y = "d"
 	}(x) // 匿名函数调用，传送参数x 被复制 x="a"
 
 	x = "c"
@@ -27,7 +27,7 @@ func TestDefer1(t *testing.T) {
 func TestDefer2(t *testing.T) {
 	x, y := "a", "b"
 
-	if x != "a" {
+	if x != "a" { // 不满足条件，不会执行下面的语句
 		defer func(s string) {
 			println("defer:", s, y)
 		}(x)
@@ -58,4 +58,18 @@ func testReturnError() (err error) {
 		fmt.Println(num)
 	}
 	return nil
+}
+
+// 多个 defer 调用采用栈顺序
+func TestDefer4(t *testing.T) {
+	defer func() {
+		println("defer:a")
+	}()
+	defer func() {
+		println("defer:b")
+	}()
+	defer func() {
+		println("defer:c")
+	}()
+	println("finished")
 }

@@ -1,8 +1,7 @@
-package pattern
+package singleton
 
 import "sync"
 
-//Go 单例模式实现
 var ins *singleton
 var once sync.Once
 
