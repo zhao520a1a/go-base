@@ -37,3 +37,8 @@ func TestStringEncode(t *testing.T) {
 	}
 
 }
+
+func TestTrimLeft(t *testing.T) {
+	fmt.Println(strings.TrimLeft("121212121222113123", "12"))
+	fmt.Println(strings.TrimPrefix("12123123", "12"))
+}
