@@ -3,20 +3,21 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize/v2"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"io/ioutil"
 	"math/rand"
 	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize/v2"
 )
 
 // 源码:https://gitee.com/xurime/excelize
 // 帮助文档：https://xuri.me/excelize/zh-hans/stream.html#Flush
-//注：
-//1.图片缩放建议使用一个开源库(github.com/nfnt/resize)，不要使用360库自带的缩放，会有一点问题
-//2.先对单元格做大小控制，再插入图片，否则有可能会导致一些图片被拉伸
+// 注：
+// 1.图片缩放建议使用一个开源库(github.com/nfnt/resize)，不要使用360库自带的缩放，会有一点问题
+// 2.先对单元格做大小控制，再插入图片，否则有可能会导致一些图片被拉伸
 func main() {
 	file1Name := "utils/excel/test1.xlsx"
 	newNormalExcelFile(file1Name)
@@ -133,7 +134,7 @@ func readPicExcel(fileName string) {
 	_ = ioutil.WriteFile(fmt.Sprintf("./%d.png", time.Now().UnixNano()), ff, 0666) //直接写入到文件就ok完活了。
 }
 
-//流式写数据
+// 流式写数据
 func WriteExcelFile(fileName string) {
 	file := excelize.NewFile()
 	streamWriter, err := file.NewStreamWriter("Sheet1")

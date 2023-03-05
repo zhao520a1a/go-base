@@ -8,7 +8,7 @@ import (
 
 	"github.com/bytedance/sonic/encoder"
 
-	"github.com/zhao520a1a/go-base.git/utils/rt"
+	"github.com/zhao520a1a/go-base/util/rt"
 )
 
 func BenchmarkHTMLEscape_Std(b *testing.B) {

@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-//DayBeginStamp ...
+// DayBeginStamp ...
 func DayBeginStamp(now int64) int64 {
 	_, offset := time.Now().Zone()
 	return now - (now+int64(offset))%int64(3600*24)
 
 }
 
-//HourBeginStamp ...
+// HourBeginStamp ...
 func HourBeginStamp(now int64) int64 {
 	_, offset := time.Now().Zone()
 	return now - (now+int64(offset))%int64(3600)
@@ -43,7 +43,7 @@ func DayBeginStampFromStr(day string) (int64, error) {
 
 }
 
-//WeekScope ..
+// WeekScope ..
 // 指定时间所在周的范围
 func WeekScope(stamp int64) (int64, int64) {
 	now := time.Unix(stamp, 0)
@@ -57,7 +57,7 @@ func WeekScope(stamp int64) (int64, int64) {
 	return begin, begin + 24*3600*7 - 1
 }
 
-//MonthScope ...
+// MonthScope ...
 // 指定时间所在月的范围
 func MonthScope(stamp int64) (int64, int64) {
 	now := time.Unix(stamp, 0)
@@ -69,39 +69,39 @@ func MonthScope(stamp int64) (int64, int64) {
 	return firstOfMonth.Unix(), lastOfMonth.Unix() + 3600*24 - 1
 }
 
-//RunTimeStat ...
+// RunTimeStat ...
 type RunTimeStat struct {
 	//logkey string
 	since time.Time
 }
 
-//Millisecond ...
+// Millisecond ...
 func (m *RunTimeStat) Millisecond() int64 {
 	return m.Microsecond() / 1000
 }
 
-//Microsecond ...
+// Microsecond ...
 func (m *RunTimeStat) Microsecond() int64 {
 	return m.Duration().Nanoseconds() / 1000
 
 }
 
-//Nanosecond ...
+// Nanosecond ...
 func (m *RunTimeStat) Nanosecond() int64 {
 	return m.Duration().Nanoseconds()
 }
 
-//Duration ...
+// Duration ...
 func (m *RunTimeStat) Duration() time.Duration {
 	return time.Since(m.since)
 }
 
-//Reset ...
+// Reset ...
 func (m *RunTimeStat) Reset() {
 	m.since = time.Now()
 }
 
-//NewTimeStat ...
+// NewTimeStat ...
 func NewTimeStat() *RunTimeStat {
 	return &RunTimeStat{
 		//logkey: key,

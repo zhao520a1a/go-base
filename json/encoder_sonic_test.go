@@ -13,7 +13,7 @@ import (
 	"github.com/bytedance/sonic/encoder"
 	"github.com/stretchr/testify/require"
 
-	"github.com/zhao520a1a/go-base.git/json/testdata"
+	"github.com/zhao520a1a/go-base/json/testdata"
 )
 
 const TwitterJson = testdata.TwitterJson

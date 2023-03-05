@@ -21,35 +21,35 @@ import (
 	"fmt"
 )
 
-//不需要额外信息的简单错误
+// 不需要额外信息的简单错误
 var ErrCouldNotOpen = errors.New("could not open1")
 
-//生成ID失败
+// 生成ID失败
 type errIdGenRpc struct {
 	Fun string
 	Msg error
 }
 
-//参数无效
+// 参数无效
 type errParamInvalid struct {
 	Fun string
 	Msg string
 }
 
-//包装错误
+// 包装错误
 type errWarping struct {
 	Fun string
 	Msg string
 	Err error
 }
 
-//没有找到
+// 没有找到
 type errNotFound struct {
 	Fun string
 	Msg string
 }
 
-//数据已存在
+// 数据已存在
 type errAlreadyExist struct {
 	Fun string
 	Msg string

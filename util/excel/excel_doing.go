@@ -54,7 +54,7 @@ type Config struct {
 	Skip int
 }
 
-//ScanErr will be returned if an underlying type couldn't be AssignableTo type of target field
+// ScanErr will be returned if an underlying type couldn't be AssignableTo type of target field
 type ScanErr struct {
 	structName, fieldName string
 	from, to              reflect.Type

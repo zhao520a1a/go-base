@@ -3,10 +3,11 @@ package mock
 import (
 	"context"
 	"database/sql"
-	"github.com/zhao520a1a/go-base.git/unittest/mock/bpm"
-	"github.com/zhao520a1a/go-base.git/unittest/mock/db"
-	"github.com/zhao520a1a/go-base.git/unittest/mock/test"
 	"testing"
+
+	"github.com/zhao520a1a/go-base/unittest/mock/bpm"
+	"github.com/zhao520a1a/go-base/unittest/mock/db"
+	"github.com/zhao520a1a/go-base/unittest/mock/test"
 
 	"github.com/stretchr/testify/suite"
 )

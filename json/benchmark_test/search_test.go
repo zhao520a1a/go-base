@@ -11,7 +11,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 
-	"github.com/zhao520a1a/go-base.git/json/testdata"
+	"github.com/zhao520a1a/go-base/json/testdata"
 )
 
 var TwitterJson = testdata.TwitterJson

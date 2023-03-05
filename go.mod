@@ -1,4 +1,4 @@
-module github.com/zhao520a1a/go-base.git
+module github.com/zhao520a1a/go-base
 
 go 1.19
 

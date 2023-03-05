@@ -1,9 +1,10 @@
 package logic
 
 import (
-	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEncodeWithSalt(t *testing.T) {

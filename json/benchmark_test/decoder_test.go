@@ -9,8 +9,8 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/sugawarayuuta/sonnet"
 
-	"github.com/zhao520a1a/go-base.git/json/testdata"
-	"github.com/zhao520a1a/go-base.git/utils/rt"
+	"github.com/zhao520a1a/go-base/json/testdata"
+	"github.com/zhao520a1a/go-base/util/rt"
 )
 
 func init() {

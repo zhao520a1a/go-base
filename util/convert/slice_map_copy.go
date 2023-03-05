@@ -13,7 +13,7 @@ type Stats struct {
 	data     []string
 }
 
-//内部字段赋值时要复制，防止外部修改data内容后影响 s.data
+// 内部字段赋值时要复制，防止外部修改data内容后影响 s.data
 func (s Stats) SetData(data []string) {
 	s.data = make([]string, len(data))
 	copy(s.data, data)
