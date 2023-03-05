@@ -8,6 +8,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+/*
+- 测试数据：低等大小 JSON 字符串
+- 测试场景：unmarshal 为 map[string]interface{}
+*/
 var (
 	defaultBufferSize uint = 4096
 	_Single_JSON           = `{"aaaaa":"` + strings.Repeat("b", int(defaultBufferSize)) + `"} { `
