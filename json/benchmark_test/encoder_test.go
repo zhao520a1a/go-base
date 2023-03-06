@@ -8,9 +8,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/bytedance/sonic/encoder"
 	gojson "github.com/goccy/go-json"
 	jsoniter "github.com/json-iterator/go"
+
+	"github.com/zhao520a1a/go-base/json/testdata"
 )
 
 /*
@@ -27,7 +30,19 @@ var (
 var _GenericValue interface{}
 var _BindingValue TwitterStruct
 
+// 小JSON数据
+type TwitterStruct testdata.Book
+
+var TwitterJson = testdata.BookJson
+
+// 中JSON数据
+//type TwitterStruct testdata.TwitterStruct
+// var TwitterJson = testdata.TwitterJson
+
 func init() {
+	// 大JSON数据
+	//data, _ := os.ReadFile("../testdata/large.json")
+	//TwitterJson = string(data)
 	_ = json.Unmarshal([]byte(TwitterJson), &_GenericValue)
 	_ = json.Unmarshal([]byte(TwitterJson), &_BindingValue)
 }
@@ -76,6 +91,15 @@ func BenchmarkEncoder_Generic_GoJson(b *testing.B) {
 }
 
 func BenchmarkEncoder_Generic_Sonic(b *testing.B) {
+	_, _ = sonic.Marshal(_GenericValue)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = sonic.Marshal(_GenericValue)
+	}
+}
+
+func BenchmarkEncoder_Generic_Sonic_V1(b *testing.B) {
 	_, _ = encoder.Encode(_GenericValue, encoder.SortMapKeys|encoder.EscapeHTML|encoder.CompactMarshaler)
 	b.SetBytes(int64(len(TwitterJson)))
 	b.ResetTimer()
@@ -127,6 +151,17 @@ func BenchmarkEncoder_Parallel_Generic_GoJson(b *testing.B) {
 }
 
 func BenchmarkEncoder_Parallel_Generic_Sonic(b *testing.B) {
+	_, _ = sonic.Marshal(_GenericValue)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_, _ = sonic.Marshal(_GenericValue)
+		}
+	})
+}
+
+func BenchmarkEncoder_Parallel_Generic_Sonic_V1(b *testing.B) {
 	_, _ = encoder.Encode(_GenericValue, encoder.SortMapKeys|encoder.EscapeHTML|encoder.CompactMarshaler)
 	b.SetBytes(int64(len(TwitterJson)))
 	b.ResetTimer()
@@ -176,6 +211,15 @@ func BenchmarkEncoder_Binding_GoJson(b *testing.B) {
 }
 
 func BenchmarkEncoder_Binding_Sonic(b *testing.B) {
+	_, _ = sonic.Marshal(&_BindingValue)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = sonic.Marshal(&_BindingValue)
+	}
+}
+
+func BenchmarkEncoder_Binding_Sonic_V1(b *testing.B) {
 	_, _ = encoder.Encode(&_BindingValue, encoder.SortMapKeys|encoder.EscapeHTML|encoder.CompactMarshaler)
 	b.SetBytes(int64(len(TwitterJson)))
 	b.ResetTimer()
@@ -227,6 +271,17 @@ func BenchmarkEncoder_Parallel_Binding_GoJson(b *testing.B) {
 }
 
 func BenchmarkEncoder_Parallel_Binding_Sonic(b *testing.B) {
+	_, _ = sonic.Marshal(&_BindingValue)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_, _ = sonic.Marshal(&_BindingValue)
+		}
+	})
+}
+
+func BenchmarkEncoder_Parallel_Binding_Sonic_V1(b *testing.B) {
 	_, _ = encoder.Encode(&_BindingValue, encoder.SortMapKeys|encoder.EscapeHTML|encoder.CompactMarshaler)
 	b.SetBytes(int64(len(TwitterJson)))
 	b.ResetTimer()

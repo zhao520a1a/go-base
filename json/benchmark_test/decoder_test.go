@@ -1,15 +1,16 @@
 package benchmark_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/bytedance/sonic/decoder"
 	gojson "github.com/goccy/go-json"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/sugawarayuuta/sonnet"
 
-	"github.com/zhao520a1a/go-base/json/testdata"
 	"github.com/zhao520a1a/go-base/util/rt"
 )
 
@@ -17,7 +18,14 @@ func init() {
 	_ = json.Unmarshal([]byte(TwitterJson), &_BindingValue)
 }
 
-type TwitterStruct testdata.TwitterStruct
+func stdDecode(s string, v interface{}, copy bool) error {
+	d := json.NewDecoder(bytes.NewReader([]byte(s)))
+	err := d.Decode(v)
+	if err != nil {
+		return err
+	}
+	return err
+}
 
 func sonicDecode(s string, v interface{}, copy bool) error {
 	d := decoder.NewDecoder(s)
@@ -68,6 +76,18 @@ func BenchmarkDecoder_Generic_GoJson(b *testing.B) {
 }
 
 func BenchmarkDecoder_Generic_Sonic(b *testing.B) {
+	var w interface{}
+	m := []byte(TwitterJson)
+	_ = sonic.Unmarshal(m, &w)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var v interface{}
+		_ = sonic.Unmarshal(m, &v)
+	}
+}
+
+func BenchmarkDecoder_Generic_Sonic_V1(b *testing.B) {
 	var w interface{}
 	_ = sonicDecode(TwitterJson, &w, true)
 	b.SetBytes(int64(len(TwitterJson)))
@@ -143,16 +163,29 @@ func BenchmarkDecoder_Parallel_Generic_GoJson(b *testing.B) {
 	})
 }
 
-func BenchmarkDecoder_Parallel_Generic_Sonnet(b *testing.B) {
+func BenchmarkDecoder_Parallel_Generic_Sonic(b *testing.B) {
 	var w interface{}
 	m := []byte(TwitterJson)
-	_ = sonnet.Unmarshal(m, &w)
+	_ = sonic.Unmarshal(m, &w)
 	b.SetBytes(int64(len(TwitterJson)))
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			var v interface{}
-			_ = sonnet.Unmarshal(m, &v)
+			_ = sonic.Unmarshal(m, &v)
+		}
+	})
+}
+
+func BenchmarkDecoder_Parallel_Generic_Sonic_V1(b *testing.B) {
+	var w interface{}
+	_ = sonicDecode(TwitterJson, &w, true)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			var v interface{}
+			_ = sonicDecode(TwitterJson, &v, true)
 		}
 	})
 }
@@ -166,6 +199,20 @@ func BenchmarkDecoder_Parallel_Generic_Sonic_Fast(b *testing.B) {
 		for pb.Next() {
 			var v interface{}
 			_ = sonicDecode(TwitterJson, &v, false)
+		}
+	})
+}
+
+func BenchmarkDecoder_Parallel_Generic_Sonnet(b *testing.B) {
+	var w interface{}
+	m := []byte(TwitterJson)
+	_ = sonnet.Unmarshal(m, &w)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			var v interface{}
+			_ = sonnet.Unmarshal(m, &v)
 		}
 	})
 }
@@ -207,6 +254,18 @@ func BenchmarkDecoder_Binding_GoJson(b *testing.B) {
 }
 
 func BenchmarkDecoder_Binding_Sonic(b *testing.B) {
+	var w TwitterStruct
+	m := []byte(TwitterJson)
+	_ = sonic.Unmarshal(m, &w)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var v TwitterStruct
+		_ = sonic.Unmarshal(m, &v)
+	}
+}
+
+func BenchmarkDecoder_Binding_Sonic_V1(b *testing.B) {
 	var w TwitterStruct
 	_ = sonicDecode(TwitterJson, &w, true)
 	b.SetBytes(int64(len(TwitterJson)))
@@ -283,6 +342,20 @@ func BenchmarkDecoder_Parallel_Binding_GoJson(b *testing.B) {
 }
 
 func BenchmarkDecoder_Parallel_Binding_Sonic(b *testing.B) {
+	var w TwitterStruct
+	m := []byte(TwitterJson)
+	_ = sonic.Unmarshal(m, &w)
+	b.SetBytes(int64(len(TwitterJson)))
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			var v TwitterStruct
+			_ = sonic.Unmarshal(m, &v)
+		}
+	})
+}
+
+func BenchmarkDecoder_Parallel_Binding_Sonic_V1(b *testing.B) {
 	var w TwitterStruct
 	_ = sonicDecode(TwitterJson, &w, true)
 	b.SetBytes(int64(len(TwitterJson)))

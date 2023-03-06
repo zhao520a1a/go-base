@@ -10,11 +10,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
-
-	"github.com/zhao520a1a/go-base/json/testdata"
 )
-
-var TwitterJson = testdata.TwitterJson
 
 /*
 - 测试数据：中等大小 JSON 字符串
