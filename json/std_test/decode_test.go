@@ -1,7 +1,3 @@
-// Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package json
 
 import (
@@ -61,8 +57,7 @@ func (*SS) UnmarshalJSON(data []byte) error {
 	return &UnmarshalTypeError{Value: "number", Type: reflect.TypeOf(SS(""))}
 }
 
-// ifaceNumAsFloat64/ifaceNumAsNumber are used to test unmarshaling with and
-// without UseNumber
+// ifaceNumAsFloat64 are used to test unmarshaling with and without UseNumber
 var ifaceNumAsFloat64 = map[string]any{
 	"k1": float64(1),
 	"k2": "s",
@@ -2092,7 +2087,7 @@ func TestInvalidUnmarshalText(t *testing.T) {
 // Test that string option is ignored for invalid types.
 // Issue 9812.
 func TestInvalidStringOption(t *testing.T) {
-	num := 0
+	num := 1
 	item := struct {
 		T time.Time         `json:",string"`
 		M map[string]string `json:",string"`
