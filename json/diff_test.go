@@ -1,10 +1,12 @@
 package json
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"testing"
 
+	"github.com/bytedance/sonic/encoder"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,4 +35,22 @@ func TestUnmarshal(t *testing.T) {
 		fmt.Println("username =", cert.Username)
 		fmt.Println("password =", cert.Password)
 	}
+}
+
+// 标准库中默认会开启html Escape，而Sonic 出于性能损耗默认不开启
+func TestEncode(t *testing.T) {
+	data := map[string]string{"&&": "<>"}
+
+	var w1 = bytes.NewBuffer(nil)
+	enc1 := json.NewEncoder(w1)
+	//enc1.SetEscapeHTML(true)
+	err := enc1.Encode(data)
+	assert.NoError(t, err)
+
+	var w2 = bytes.NewBuffer(nil)
+	enc2 := encoder.NewStreamEncoder(w2)
+	//enc2.SetEscapeHTML(true)
+	err = enc2.Encode(data)
+	assert.NoError(t, err)
+	fmt.Printf("%v%v", w1.String(), w2.String())
 }

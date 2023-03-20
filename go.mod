@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/360EntSecGroup-Skylar/excelize/v2 v2.2.0
 	github.com/buger/jsonparser v1.1.1
-	github.com/bytedance/sonic v1.8.3
+	github.com/bytedance/sonic v1.7.0
 	github.com/cheekybits/genny v1.0.1-0.20200709201058-3e22f1a88ff2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
