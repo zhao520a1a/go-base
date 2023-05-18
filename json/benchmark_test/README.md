@@ -1,5 +1,33 @@
 ## Benchmarks
 
+### 测试包版本
+下面是评测性能时所用的各个包的版本情况，具体的测试代码，可参考[benchmark_test](https://github.com/zhao520a1a/go-base/blob/master/json/benchmark_test/bench.sh) ，欢迎友好交流。
+
+| **库名** | **version** |
+| -------- | ----------- |
+| StdLib   | v1.19       |
+| JsonIter | v1.1.13     |
+| GoJson   | v0.10.1     |
+| Sonic    | v1.8.3      |
+
+**为什么没有评测 GJson 库呢?**
+
+GJson 在单键查找的场景下有很大的优势。这是因为它的查找是通过 lazy-load 实现的，它巧妙地跳过了传递值，有效地减少了很多不必要的解析，但其实跳过也是一种轻量级解析，实际是在处理 json 控制字符“[”、“{”等；然而当涉及到多键查找时，Gjson 做的事比标准库更糟糕，这是其跳过机制的副作用：相同路径查找导致的重复开销。针对它的使用场景，单纯的评测定性编解码和泛型编解码，对 GJson 是不公平的。
+
+### 测试环境
+```
+型号名称：	MacBook Pro
+型号标识符：	MacBookPro16,1
+处理器名称：	六核Intel Core i7
+处理器速度：	2.6 GHz
+处理器数目：	1
+核总数：	6
+L2缓存（每个核）：	256 KB
+L3缓存：	12 MB
+超线程技术：	已启用
+内存：	16 GB
+```
+
 ### 测试数据
 - 小[Small](../testdata/small.go) ：400B，11 key，深度 3 层； 
 - 中[Medium](../testdata/medium.go)：13KB，300+ key，深度 4层（实际业务数据，其中有大量的嵌套 JSON string)； 
