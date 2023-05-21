@@ -1,4 +1,4 @@
-package main
+package convert
 
 import (
 	"unsafe"
@@ -21,7 +21,7 @@ type stringStruct struct {
 	len int
 }
 
-// Bytes2str 这里利用的事unsafe.Pointer指针互转，把byte直接转换成string了
+// Bytes2str 这里利用的是unsafe.Pointer指针互转，把byte直接转换成string了
 func Bytes2str(b []byte) string {
 	if b != nil && len(b) > 0 {
 		return *(*string)(unsafe.Pointer(&b))

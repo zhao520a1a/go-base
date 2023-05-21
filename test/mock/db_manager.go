@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/zhao520a1a/go-base/unittest/mock/db"
+	"github.com/zhao520a1a/go-base/test/mock/db"
 )
 
 type DBManager struct {

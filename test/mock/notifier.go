@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/zhao520a1a/go-base/unittest/mock/bpm"
+	"github.com/zhao520a1a/go-base/test/mock/bpm"
 )
 
 type Notifier struct {

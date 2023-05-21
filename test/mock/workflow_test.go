@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/zhao520a1a/go-base/unittest/mock/bpm"
-	"github.com/zhao520a1a/go-base/unittest/mock/db"
-	"github.com/zhao520a1a/go-base/unittest/mock/test"
+	"github.com/zhao520a1a/go-base/test/mock/bpm"
+	"github.com/zhao520a1a/go-base/test/mock/db"
+	"github.com/zhao520a1a/go-base/test/mock/test"
 
 	"github.com/stretchr/testify/suite"
 )

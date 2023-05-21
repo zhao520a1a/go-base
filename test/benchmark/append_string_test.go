@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/zhao520a1a/go-base/advance/convert"
 )
 
 const (
@@ -66,7 +68,7 @@ func BenchmarkStringJoin(b *testing.B) {
 }
 
 // bytes.Buffer.WriteString()
-func BenchmarkBufferWrite(b *testing.B) {
+func BenchmarkStringBufferWrite(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
 		buf := new(bytes.Buffer)
@@ -100,7 +102,7 @@ func BenchmarkStringBuilder(b *testing.B) {
 }
 
 // append()
-func BenchmarkBytesAppend(b *testing.B) {
+func BenchmarkStringBytesAppend(b *testing.B) {
 	var result string
 	for n := 0; n < b.N; n++ {
 		var bbb []byte
@@ -128,8 +130,9 @@ func BenchmarkStringCopy(b *testing.B) {
 			bl += copy(bs[bl:], sss)
 		}
 
-		result = string(bs)
-		// 		result = convert.Bytes2str(bs)  性能再提升
+		//result = string(bs)
+		//进一步性能优化
+		result = convert.Bytes2str(bs)
 	}
 	b.StopTimer()
 	if result != expected {

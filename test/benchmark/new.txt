@@ -1,0 +1,26 @@
+goos: darwin
+goarch: amd64
+pkg: github.com/zhao520a1a/go-base/test/benchmark
+cpu: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+BenchmarkStringCopy-12    	   28989	     40328 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29858	     40412 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29563	     40867 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   28186	     43101 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   24523	     42975 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   28629	     42256 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29510	     41275 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29762	     40585 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29090	     40088 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29774	     41339 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29544	     40426 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29402	     40073 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   28653	     40807 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29835	     40342 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29826	     41415 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29750	     40317 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   28564	     40193 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29173	     40444 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29610	     41225 ns/op	  122880 B/op	       1 allocs/op
+BenchmarkStringCopy-12    	   29502	     41493 ns/op	  122880 B/op	       1 allocs/op
+PASS
+ok  	github.com/zhao520a1a/go-base/test/benchmark	32.550s
