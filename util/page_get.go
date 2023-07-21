@@ -32,6 +32,24 @@ func PageQuery(dataList []string, offset, limit int) (pageDataList []string) {
 	return
 }
 
+// 可以改写成泛型模式
+func Page[Data any](dataList []*Data, offset, limit int) (pageDataList []*Data) {
+	// sort.SliceStable(dataList, func(i, j int) bool {
+	// 	return dataList[i].Date > dataList[j].Date
+	// })
+	total := len(dataList)
+	if total > offset {
+		if total > offset+limit {
+			pageDataList = dataList[offset : offset+limit]
+			return
+		}
+		pageDataList = dataList[offset:total]
+		return
+	}
+	pageDataList = dataList[MinInt(offset, total):MinInt(offset+limit, total)]
+	return
+}
+
 func MinInt(a, b int) int {
 	if a > b {
 		return b

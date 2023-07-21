@@ -1,4 +1,4 @@
-package main
+package slice
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 /*
 并发访问 slice 是不安全的！
 真实的输出并没有达到我们的预期，len(slice) < n。 问题出在哪？我们都知道slice是对数组一个连续片段的引用，当slice长度增加的时候，可能底层的数组会被换掉。当出在换底层数组之前，切片同时被多个goroutine拿到，并执行append操作。那么很多goroutine的append结果会被覆盖，导致n个gouroutine append后，长度小于n。
-
 */
 func TestSyncSlice(t *testing.T) {
 	var (

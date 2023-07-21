@@ -1,5 +1,8 @@
-package main
+package slice
 
+/*
+封装的并发安全的 []int
+*/
 type ServiceData struct {
 	ch   chan int // 用来 同步的channel
 	data []int    // 存储数据的slice
