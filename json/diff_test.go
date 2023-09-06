@@ -54,3 +54,32 @@ func TestEncode(t *testing.T) {
 	assert.NoError(t, err)
 	fmt.Printf("%v%v", w1.String(), w2.String())
 }
+
+type User struct {
+	ID   int64  `json:"id`
+	Name string `json:"name`
+	Sex  string `json:"sex`
+}
+
+/*
+JSON Umarshal 针对同一个对象是增量更新的，而是全量更新
+*/
+func TestStdJsonUnmarshal(t *testing.T) {
+	user1 := User{}
+	var oldData = `{"ID":1,"Name":"A","Sex":""}`
+	err := json.Unmarshal([]byte(oldData), &user1)
+	if err != nil {
+		return
+	}
+	var newData = `{"Name":"B","Sex":"man"}`
+	err = json.Unmarshal([]byte(newData), &user1)
+	if err != nil {
+		return
+	}
+	data, err := json.Marshal(user1)
+	if err != nil {
+		return
+	}
+	fmt.Println(string(data))
+	// 结果：{"ID":1,"Name":"B","Sex":"man"}
+}
